@@ -1,0 +1,32 @@
+Deploy and run the application - output: application is working
+
+> (done) use flask to create a python application
+> (done) application is api: get a list of strings, return a list with strings grouped into similarity
+> (done) application can be deployed and is working on azure app service
+
+Add login using azure as identitiy provider
+
+> list of books and landing page is accessible to everybody
+> the similarity function is limited to users which are logged in
+
+Store logs into azure santinel (if possible)
+
+Add db to store information
+
+-----------------------
+
+#deploy the application automatically
+> move to your folder
+> az webapp up --runtime 'PYTHON:3.9' --sku B1 --logs --location "West US 3"
+
+#remove the app
+> az group list
+> az group delete --name <app resource group>
+
+#secure access 
+https://docs.microsoft.com/en-us/azure/active-directory-b2c/configure-authentication-sample-python-web-app?tabs=app-reg-ga
+https://www.osohq.com/post/oso-azure
+
+--------------------
+
+python-webapp-se: ITG8Q~DrmvsT42gHjJjVyinyM2VUNXwoeRJ-sdde

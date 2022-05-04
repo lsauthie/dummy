@@ -33,7 +33,7 @@ books = [
 
 @app.route('/', methods=['GET'])
 def home():
-    return "<h1>Welcome Ludovic</h1><p>This site is a prototype API for distant reading of science fiction novels.</p>"
+    return "<h1>Welcome Ludovic Bis</h1><p>This site is a prototype API for distant reading of science fiction novels.</p>"
     
 # A route to return all of the available entries in our catalog.
 @app.route('/api/v1/books/all', methods=['GET'])

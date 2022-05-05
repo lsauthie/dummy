@@ -9,6 +9,9 @@ on:
     branches:
       - master
   workflow_dispatch:
+  
+env:
+  WEBAPP_NAME: 'webapp-70304'  # Replace with the name of your Azure web app
 
 jobs:
   build:
@@ -39,25 +42,24 @@ jobs:
           path: |
             . 
             !venv/
-
-  deploy:
+            
+  deploy-to-webapp:
+    needs: build-and-test
     runs-on: ubuntu-latest
-    needs: build
-    environment:
-      name: 'Production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v2
         with:
           name: python-app
           path: .
-          
-      - name: 'Deploy to Azure Web App'
-        uses: azure/webapps-deploy@v2
-        id: deploy-to-webapp
+      
+      - name: Log in to Azure CLI
+        uses: azure/login@v1
         with:
-          app-name: 'webapp-70304'
-          slot-name: 'Production'
-          publish-profile: ${{ secrets.AZURE_CREDENTIALS }}
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+    
+
+      - name: Deploy to App Service
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ env.WEBAPP_NAME}}

@@ -12,6 +12,7 @@ on:
   
 env:
   WEBAPP_NAME: 'webapp-70304'  # Replace with the name of your Azure web app
+  RESOURCE_GROUP: 'myResourceGroup-70304'
 
 jobs:
   build:
@@ -57,9 +58,19 @@ jobs:
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
+          
+      - name: Configure deployment and runtime settings on the webapp
+        run: |
+            az configure --defaults ${{ env.RESOURCE_GROUP }}
+            az webapp config appsettings --name ${{ env.WEBAPP_NAME }} --settings \
+                SCM_DO_BUILD_DURING_DEPLOYMENT=true \
+                FLASK_ENV=production
+
+            az webapp config set --name ${{ env.WEBAPP_NAME }} \
+                --startup-file "gunicorn --bind=0.0.0.0 --timeout 600 app:app"
     
 
       - name: Deploy to App Service
         uses: azure/webapps-deploy@v2
         with:
-          app-name: ${{ env.WEBAPP_NAME}}
+          app-name: ${{ env.WEBAPP_NAME }}

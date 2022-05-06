@@ -55,7 +55,7 @@ jobs:
           path: .
           
       - name: set migration command on App Service
-        uses: azure/appservice-settings@v1
+        uses: Azure/appservice-settings@v1
         with:  
           app-name: 'webapp-swissre'
           app-settings-json: '[{ "name": "SCM_DO_BUILD_DURING_DEPLOYMENT", "value": "true" }]'

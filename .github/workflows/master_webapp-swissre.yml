@@ -54,6 +54,12 @@ jobs:
           name: python-app
           path: .
           
+      - name: set migration command on App Service
+        uses: azure/appservice-settings@v1
+        with:  
+          app-name: 'webapp-swissre'
+          app-settings-json: '[{ "name": "SCM_DO_BUILD_DURING_DEPLOYMENT", "value": "true" }]'
+          
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v2
         id: deploy-to-webapp

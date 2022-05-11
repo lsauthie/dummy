@@ -1,48 +1,74 @@
 '''
+Useful references
 https://programminghistorian.org/en/lessons/creating-apis-with-python-and-flask
-
-todo:
-    > DONE: link this script and the simi. script
+https://auth0.com/blog/sqlalchemy-orm-tutorial-for-python-developers/
 '''
+
 import flask
 from flask import request, jsonify
 import similarities as sim
 from bs4 import BeautifulSoup
+from flask_sqlalchemy import SQLAlchemy
+from dbswissre import Swissre
+from base import Session, engine, Base
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
 
-# Create some test data for our catalog in the form of a list of dictionaries.
-books = [
-    {'id': 0,
-     'title': 'A Fire Upon the Deep',
-     'author': 'Vernor Vinge',
-     'first_sentence': 'The coldsleep itself was dreamless.',
-     'year_published': '1992'},
-    {'id': 1,
-     'title': 'The Ones Who Walk Away From Omelas',
-     'author': 'Ursula K. Le Guin',
-     'first_sentence': 'With a clamor of bells that set the swallows soaring, the Festival of Summer came to the city Omelas, bright-towered by the sea.',
-     'published': '1973'},
-    {'id': 2,
-     'title': 'Dhalgren',
-     'author': 'Samuel R. Delany',
-     'first_sentence': 'to wound the autumnal city.',
-     'published': '1975'}
-]
 
 @app.route('/', methods=['GET'])
 def home():
-    return "<h1>Welcome Ludovic Bis</h1><p>This site is a prototype API for distant reading of science fiction novels.</p>"
     
-# A route to return all of the available entries in our catalog.
-@app.route('/api/v1/books/all', methods=['GET'])
-def api_all():
-    return jsonify(books)
+    url_root = request.url_root
     
+    link1 = url_root + "dole/flush"
+    link2 = url_root + "dole/all"
+    link3 = url_root + "dole?strings=ludovic is a big man, ludovic is a man, ludovic is a great man, sarah is his sister, patrizi is his mother, sarah is beautiful"
     
-#http://127.0.0.1:5000/api/v1/dole?strings=ludovic is a big man, ludovic is a man, ludovic is a great man, sarah is his sister, patrizi is his mother, sarah is beautiful
-@app.route('/api/v1/dole', methods=['GET'])
+    welcome = """ <h1>Welcome Ludovic Bis</h1>
+    
+    <a href="{}">/dole/flush</a></br>
+    <a href="{}">/dole/all   </a></br>
+    <a href="{}">/dole?strings=ludovic is a big man, ludovic is a man, ludovic is a great man, sarah is his sister, patrizi is his mother, sarah is beautiful</a>
+    
+   
+    """.format(link1, link2, link3)
+    
+    return welcome
+
+
+@app.route('/dole/flush', methods=['GET'])
+def dole_flush():
+    session = Session()
+    session.query(Swissre).delete()
+    session.commit()
+    session.close()
+    return "Swissre table has been flushed"
+
+@app.route('/dole/all', methods=['GET'])
+def dole_all():
+    session = Session()
+    swissre = session.query(Swissre).all()
+    
+    d = {}
+    for i in swissre:
+        reference = i.reference
+        sentence = i.sentence
+        ratio = i.ratio
+        t = (sentence, ratio)
+        
+        if reference in d:
+            if t not in d[reference]:
+                d[reference].append(t)
+        else:
+            d[reference] = [t]
+    
+    session.close()
+    return jsonify(d)
+
+    
+#http://127.0.0.1:5000/dole?strings=ludovic is a big man, ludovic is a man, ludovic is a great man, sarah is his sister, patrizi is his mother, sarah is beautiful
+@app.route('/dole', methods=['GET'])
 def dole():
     if 'strings' in request.args:
         arg_strings = request.args['strings']
@@ -53,6 +79,18 @@ def dole():
             strings = [i.strip() for i in arg_strings.split(',')]
             #compare strings
             res = sim.sim(strings, 0.7) #list of strings and similarity ratio
+            
+            #add information into DB
+            session = Session()
+            for reference, l in res.items():
+                for item in l:
+                    db_row = Swissre(reference, item[0], item[1])
+                    session.add(db_row)
+            
+            
+            session.commit()
+            session.close()
+                
         
     else:
         return 'Error: Please provide strings, i.e. /api/v1/dole?strings=string1, string2, string3'
@@ -60,4 +98,6 @@ def dole():
     return jsonify(res)
 	
 if __name__ == '__main__':
+    Base.metadata.create_all(engine)
     app.run(host='0.0.0.0',port=5000)
+    

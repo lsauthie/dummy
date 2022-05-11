@@ -12,6 +12,8 @@ from flask_sqlalchemy import SQLAlchemy
 from dbswissre import Swissre
 from base import Session, engine, Base
 
+
+
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
 

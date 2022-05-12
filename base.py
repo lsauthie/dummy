@@ -5,7 +5,6 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
-
 DBCON = os.getenv('DBCON')
 
 connstr = DBCON

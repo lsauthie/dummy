@@ -3,11 +3,21 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import os
 from dotenv import load_dotenv
+
 load_dotenv()
 
-DBCON = os.getenv('DBCON')
+dbuser = os.getenv('DBUSER')
+dbpass = os.getenv('DBPASS')
+dbserver = os.getenv('DBSERVER')
 
-connstr = DBCON
+
+if dbserver != 'localhost':#running on azure
+    connstr = "postgres://{}:{}@{}/postgres?sslmode=require".format(dbuser, dbpass, dbserver)
+else:
+    connstr = 'postgresql://{}:{}@{}:5432'.format(dbuser, dbpass, dbserver)
+
+#DBCON = 'postgresql://postgres:admin@localhost:5432'
+#"postgres://adminTerraform:QAZwsx123@swissre-server.postgres.database.azure.com/postgres?sslmode=require"
 
 print(connstr)
 

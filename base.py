@@ -5,12 +5,10 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
-DBHOST = os.getenv('DBHOST')
-DBNAME = os.getenv('DBNAME')
-DBUSER = os.getenv('DBUSER')
-DBPASS = os.getenv('DBPASS')
 
-connstr = 'postgresql://{}:{}@{}/{}'.format(DBUSER,DBPASS,DBHOST, DBNAME)
+DBCON = os.getenv('DBCON')
+
+connstr = DBCON
 
 print(connstr)
 

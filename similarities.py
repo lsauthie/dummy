@@ -43,13 +43,6 @@ def sim(l_str, similarity_ratio=0.9):
     
     return d_out
 
-#for testing purposes - python similarities.py
-strings = 'ludovic is a big man, ludovic is a man, ludovic is a great man, sarah is his sister, patrizi is his mother, sarah is beautiful'
-strings = [i.strip() for i in strings.split(',')]
-print(sim(strings))
-    
-
-
 
     
 

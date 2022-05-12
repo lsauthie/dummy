@@ -10,7 +10,11 @@ DBNAME = os.getenv('DBNAME')
 DBUSER = os.getenv('DBUSER')
 DBPASS = os.getenv('DBPASS')
 
-engine = create_engine('postgresql://{}:{}@{}/{}'.format(DBUSER,DBPASS,DBHOST, DBNAME))
+connstr = 'postgresql://{}:{}@{}/{}'.format(DBUSER,DBPASS,DBHOST, DBNAME)
+
+print(connstr)
+
+engine = create_engine(connstr)
 Session = sessionmaker(bind=engine)
 
 Base = declarative_base()

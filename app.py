@@ -85,9 +85,13 @@ def dole():
             #add information into DB
             session = Session()
             for reference, l in res.items():
-                for item in l:
-                    db_row = Swissre(reference, item[0], item[1])
+                if len(l) == 0:
+                    db_row = Swissre(reference, "", -1)
                     session.add(db_row)
+                else:
+                    for item in l:
+                        db_row = Swissre(reference, item[0], item[1])
+                        session.add(db_row)
             
             
             session.commit()

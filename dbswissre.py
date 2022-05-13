@@ -6,7 +6,7 @@ class Swissre(Base):
 
     id = Column(Integer, primary_key=True)
     reference = Column(String(120), nullable=False)
-    sentence = Column(String(120), nullable=False)
+    sentence = Column(String(120))
     ratio = Column(Float)
 
     def __init__(self, reference, sentence, ratio):

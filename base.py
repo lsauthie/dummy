@@ -11,7 +11,7 @@ dbpass = os.getenv('DBPASS')
 dbserver = os.getenv('DBSERVER')
 
 if dbserver != 'localhost':#running on azure
-    connstr = 'postgresql://{}:{}@{}.postgres.database.azure.compostgres?sslmode=require'.format(dbuser, dbpass, dbserver)
+    connstr = 'postgresql://{}:{}@{}.postgres.database.azure.com/swissre-db?sslmode=require'.format(dbuser, dbpass, dbserver)
 else:
     connstr = 'postgresql://{}:{}@{}:5432/swissre'.format(dbuser, dbpass, dbserver)
 

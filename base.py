@@ -15,11 +15,6 @@ if dbserver != 'localhost':#running on azure
 else:
     connstr = 'postgresql://{}:{}@{}:5432/swissre'.format(dbuser, dbpass, dbserver)
 
-#DBCON = 'postgresql://postgres:admin@localhost:5432'
-#"postgres://adminTerraform:QAZwsx123@swissre-server.postgres.database.azure.com/postgres?sslmode=require"
-
-print(connstr)
-
 engine = create_engine(connstr)
 Session = sessionmaker(bind=engine)
 

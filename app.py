@@ -14,6 +14,7 @@ from bs4 import BeautifulSoup
 from flask_sqlalchemy import SQLAlchemy
 from dbswissre import Swissre
 from base import Session, engine, Base
+import keyvault
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
@@ -104,7 +105,7 @@ def dole():
         return 'Error: Please provide strings, i.e. /api/v1/dole?strings=string1, string2, string3'
         
     return jsonify(res)
-	
+    	
 if __name__ == '__main__':
     app.run(host='0.0.0.0',port=5000)
     

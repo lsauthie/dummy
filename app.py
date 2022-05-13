@@ -105,6 +105,10 @@ def dole():
         return 'Error: Please provide strings, i.e. /api/v1/dole?strings=string1, string2, string3'
         
     return jsonify(res)
+    
+@app.route('/key', methods=['GET'])
+def key():
+    return keyvault.retrieved_secret.value
     	
 if __name__ == '__main__':
     app.run(host='0.0.0.0',port=5000)

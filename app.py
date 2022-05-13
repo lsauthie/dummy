@@ -12,10 +12,9 @@ from flask_sqlalchemy import SQLAlchemy
 from dbswissre import Swissre
 from base import Session, engine, Base
 
-
-
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
+Base.metadata.create_all(engine) #this cannot be in the __name__ function as it would not work when calling flask run
 
 
 @app.route('/', methods=['GET'])
@@ -104,6 +103,5 @@ def dole():
     return jsonify(res)
 	
 if __name__ == '__main__':
-    Base.metadata.create_all(engine)
     app.run(host='0.0.0.0',port=5000)
     

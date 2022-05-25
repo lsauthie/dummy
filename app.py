@@ -7,18 +7,26 @@ step1: working
 step2: working
 '''
 
+#step1
 import flask
 from flask import request, jsonify
 import similarities as sim
 from bs4 import BeautifulSoup
+
+#step2
 from flask_sqlalchemy import SQLAlchemy
 from dbswissre import Swissre
 from base import Session, engine, Base
+
+#step3
 import keyvault
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
-Base.metadata.create_all(engine) #this cannot be in the __name__ function as it would not work when calling flask run
+
+#step2: instantiate the connection with the DB - and create the table if not existing
+#this function needs to be outside __name__ otherwise it would work when calling "python app.py" but not "flask run"
+Base.metadata.create_all(engine)
 
 
 @app.route('/', methods=['GET'])
@@ -85,7 +93,7 @@ def dole():
             #compare strings
             res = sim.sim(strings, 0.7) #list of strings and similarity ratio
             
-            #add information into DB
+            #step2: populate the DB
             session = Session()
             for reference, l in res.items():
                 if len(l) == 0:
